@@ -214,39 +214,6 @@ Requirements:
 
 ---
 
-## Development
-
-```bash
-source .venv/bin/activate
-pip install -e .[dev]
-
-pytest                     # test suite
-basedpyright               # type checking
-ruff check . && ruff format .
-```
-
-The C++ backend is in `src/sudoku_backend.cpp` (solver, generator, analyzer);
-the nanobind bridge is `src/sudoku.cpp`; the Python package is under
-`sudoku/`.
-
-### Publishing a release
-
-Wheels for CPython 3.10–3.14 (manylinux 2.28, x86_64) are built inside a
-Docker container:
-
-```bash
-docker run --rm -v "$(pwd)":/io cuda13_builder /io/build_wheels.sh
-```
-
-The repaired wheels land in `wheelhouse/`. Upload with `twine`:
-
-```bash
-twine check wheelhouse/*
-twine upload --repository pypi wheelhouse/*
-```
-
----
-
 ## License
 
 MIT — see [LICENSE](LICENSE).
