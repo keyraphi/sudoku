@@ -1,0 +1,79 @@
+[build-system]
+requires = ["scikit-build-core>=0.10.0", "nanobind>=3.1.0"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "fast-sudoku"
+version = "0.2.0"
+description = "Fast C++ Sudoku engine with PDF rendering and per-cell difficulty analysis."
+authors = [
+    { name = "Raphael Braun", email = "keyraphi@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C++",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Games/Entertainment :: Puzzle Games",
+]
+license = { text = "MIT" }
+
+dependencies = [
+    "numpy>=1.23",
+    "pillow>=10.0",
+]
+
+[project.optional-dependencies]
+dev = ["basedpyright", "ruff", "pytest", "pytest-cov"]
+test = ["pytest", "pytest-cov"]
+
+[project.urls]
+Homepage = "https://keyraphi.github.io/sudoku/"
+Issues = "https://github.com/keyraphi/sudoku/issues"
+
+[tool.scikit-build]
+cmake.version = ">=3.25"
+cmake.build-type = "Release"
+wheel.packages = ["sudoku"]
+wheel.install-dir = "sudoku"
+install.strip = false
+sdist.include = [
+    "CMakeLists.txt",
+    "README.md",
+    "src/**",
+    "sudoku/**",
+    "tests/**",
+]
+sdist.exclude = [
+    "build",
+    "examples/output",
+    ".venv",
+    "sudoku_debug",
+    "*.egg-info",
+    "**/__pycache__",
+]
+
+[tool.cibuildwheel]
+build = ["cp310-*", "cp311-*", "cp312-*", "cp313-*"]
+skip = ["*-win32", "*-manylinux_i686", "*-musllinux*"]
+test-requires = ["pytest"]
+test-command = "pytest {project}/tests"
+
+[tool.cibuildwheel.linux]
+before-all = "yum install -y gcc-toolset-13-gcc gcc-toolset-13-gcc-c++"
+
+[tool.cibuildwheel.environment]
+CC = "gcc"
+CXX = "g++"
+
+[tool.coverage.run]
+source = ["sudoku"]
+branch = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
